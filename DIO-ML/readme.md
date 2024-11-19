@@ -1,59 +1,28 @@
 ---
-lab:
-    title: 'Explore Automated Machine Learning in Azure Machine Learning'
+    title: Desafio 01: Trabalhando com Machine Learning na Prática no AZURE ML
 ---
 
-# Explore Automated Machine Learning in Azure Machine Learning
+# Explorando a automatização de ML no Azure
 
-In this exercise, you'll use the automated machine learning feature in Azure Machine Learning to train and evaluate a machine learning model. You'll then deploy and test the trained model.
+## Primeiro, criei um Azure Machine Learning workspace e uma Subscription 
 
-This exercise should take approximately **30** minutes to complete.
+1. Selecionei **+ Create a resource**, procurando por *Machine Learning*, e criando um novo recurso de **Azure Machine Learning** com os parâmetros indicados no DESAFIO da DIO e na documentação do Microsoft Learn. Depois, entrei no workspace criado do Azure Machine Learning studio.
 
-## Create an Azure Machine Learning workspace
+## Em seguida, usei automated machine learning para treinar um modelo usando os passos a seguir:
 
-To use Azure Machine Learning, you need to provision an Azure Machine Learning workspace in your Azure subscription. Then you'll be able to use Azure Machine Learning studio to work with the resources in your workspace.
+1. Criei um novo ML job automatizado:
 
-> **Tip**: If you already have an Azure Machine Learning workspace, you can use that and skip to the next task.
+    **Parâmetros Básicos**:
 
-1. Sign into the [Azure portal](https://portal.azure.com) at `https://portal.azure.com` using your Microsoft credentials.
-
-1. Select **+ Create a resource**, search for *Machine Learning*, and create a new **Azure Machine Learning** resource with the following settings:
-    - **Subscription**: *Your Azure subscription*.
-    - **Resource group**: *Create or select a resource group*.
-    - **Name**: *Enter a unique name for your workspace*.
-    - **Region**: *Select the closest geographical region*.
-    - **Storage account**: *Note the default new storage account that will be created for your workspace*.
-    - **Key vault**: *Note the default new key vault that will be created for your workspace*.
-    - **Application insights**: *Note the default new application insights resource that will be created for your workspace*.
-    - **Container registry**: None (*one will be created automatically the first time you deploy a model to a container*).
-
-1. Select **Review + create**, then select **Create**. Wait for your workspace to be created (it can take a few minutes), and then go to the deployed resource.
-
-1. Select **Launch studio** (or open a new browser tab and navigate to [https://ml.azure.com](https://ml.azure.com?azure-portal=true), and sign into Azure Machine Learning studio using your Microsoft account). Close any messages that are displayed.
-
-1. In Azure Machine Learning studio, you should see your newly created workspace. If not, select **All workspaces** in the left-hand menu and then select the workspace you just created.
-
-## Use automated machine learning to train a model
-
-Automated machine learning enables you to try multiple algorithms and parameters to train multiple models, and identify the best one for your data. In this exercise, you'll use a dataset of historical bicycle rental details to train a model that predicts the number of bicycle rentals that should be expected on a given day, based on seasonal and meteorological features.
-
-> **Citation**: *The data used in this exercise is derived from [Capital Bikeshare](https://www.capitalbikeshare.com/system-data) and is used in accordance with the published data [license agreement](https://www.capitalbikeshare.com/data-license-agreement)*.
-
-1. In [Azure Machine Learning studio](https://ml.azure.com?azure-portal=true), view the **Automated ML** page (under **Authoring**).
-
-1. Create a new Automated ML job with the following settings, using **Next** as required to progress through the user interface:
-
-    **Basic settings**:
-
-    - **Job name**: Job name field should already be prepopulated with a unique name. Keep it as is.
+    - **Job name**: mesmo nome sugerido.
     - **New experiment name**: `mslearn-bike-rental`
-    - **Description**: Automated machine learning for bike rental prediction
-    - **Tags**: *none*
+    - **Descrição**: Automated machine learning for bike rental prediction.
+    - **Tags**: *nenhuma*
 
-   **Task type & data**:
+   **Tipo da Task e Dados**:
 
     - **Select task type**: Regression
-    - **Select dataset**: Create a new dataset with the following settings:
+    - **Select dataset**: Criei um novo new dataset com os seguintes parâmetros:
         - **Data type**:
             - **Name**: `bike-rentals`
             - **Description**: `Historic bike rental data`
@@ -64,11 +33,11 @@ Automated machine learning enables you to try multiple algorithms and parameters
             - **Datastore type**: Azure Blob Storage
             - **Name**: workspaceblobstore
         - **MLtable selection**:
-            - **Upload folder**: *Download and unzip the folder that contains the two files you need to upload* `https://aka.ms/bike-rentals`
+            - **Upload folder**: *Baixei e unzipei a pasta que contém os dois arquivos para dar upload do link seguinte* `https://aka.ms/bike-rentals`
 
-        Select **Create**. After the dataset is created, select the **bike-rentals** dataset to continue to submit the Automated ML job.
+     Selecionei **Create** e depois o conjunto de dados **bike-rentals**.
 
-    **Task settings**:
+    **Parâmetros de Tarefa**:
 
     - **Task type**: Regression
     - **Dataset**: bike-rentals
@@ -100,30 +69,19 @@ Automated machine learning enables you to try multiple algorithms and parameters
     - **Virtual machine size**: Standard_DS3_V2\*
     - **Number of instances**: 1
 
-    \* *If your subscription restricts the VM sizes available to you, choose any available size.*
+    \* Aqui não foi esse o selecionado pois a versão trial não permite esse tamanho de máquina. Escolhi o maior que pudia. .*
 
-1. Submit the training job. It starts automatically.
+1. Segui todos esses passos que foram tirados da documentação da microsoft.
 
-1. Wait for the job to finish. It might take a while — now might be a good time for a coffee break!
-
-## Review the best model
+## Revisando o melhor modelo
 
 When the automated machine learning job has completed, you can review the best model it trained.
 
-1. On the **Overview** tab of the automated machine learning job, note the best model summary.
-    ![Screenshot of the best model summary of the automated machine learning job with a box around the algorithm name.](./media/use-automated-machine-learning/complete-run.png)
+1.Escolhi o melhor modelo e vi as métricas.
 
-    > **Note**
-    > You may see a message under the status "Warning: User specified exit score reached...". This is an expected message. Please continue to the next step.
-  
-1. Select the text under **Algorithm name** for the best model to view its details.
+## Deploy e testar o modelo
 
-1. Select the **Metrics** tab and select the **residuals** and **predicted_true** charts if they are not already selected.
-
-    Review the charts which show the performance of the model. The **residuals** chart shows the *residuals* (the differences between predicted and actual values) as a histogram. The **predicted_true** chart compares the predicted values against the true values.
-
-## Deploy and test the model
-
+Nessa parte, tentei fazer exatamente o que diz a documentação da microsoft:
 1. On the **Model** tab for the best model trained by your automated machine learning job, select **Deploy** and use the **Real-time endpoint** option to deploy the model with the following settings:
     - **Virtual machine**: Standard_DS3_v2
     - **Instance count**: 3
@@ -133,18 +91,15 @@ When the automated machine learning job has completed, you can review the best m
     - **Inferencing data collection**: *Disabled*
     - **Package Model**: *Disabled*
 
-1. Wait for the deployment to start - this may take a few seconds. The **Deploy status** for the **predict-rentals** endpoint will be indicated in the main part of the page as *Running*.
-1. Wait for the **Deploy status** to change to *Succeeded*. This may take 5-10 minutes.
+   2. No entanto, o deplou deu erro. Vasculhando a internet, desobri que tinha que registrar resource provider na minha subscription: Microsoft.CDN e Microsoft.PolicyInsights. Depois disso o deploy funcionou.
 
-## Test the deployed service
+## Testando o deploy
 
-Now you can test your deployed service.
+1. Selecionei em Azure Machine Learning studio, no menu da esquerda, e seleiconei **Endpoints** e real-time endpoint que dei deploy anteriormente.
 
-1. In Azure Machine Learning studio, on the left hand menu, select **Endpoints** and open the **predict-rentals** real-time endpoint.
+1. Abri a página de **Test**.
 
-1. On the **predict-rentals** real-time endpoint page view the **Test** tab.
-
-1. In the **Input data to test endpoint** pane, replace the template JSON with the following input data:
+1. Substituti o template JSON com os seguintes dados:
 
     ```json
       {
@@ -170,20 +125,11 @@ Now you can test your deployed service.
 
     ```
 
-1. Click the **Test** button.
+1. Cliquei o botão de **Test** e recebi os resultados:
 
-1. Review the test results, which include a predicted number of rentals based on the input features - similar to this:
+[
+  352.661485332827
+]
 
-    ```JSON
-    [
-      352.3564674945718
-    ]
-    ```
+2. Os resultados e o json teste estão na página do repositório.
 
-    The test pane took the input data and used the model you trained to return the predicted number of rentals.
-
-Let's review what you have done. You used a dataset of historical bicycle rental data to train a model. The model predicts the number of bicycle rentals expected on a given day, based on seasonal and meteorological *features*.
-
-Let's review what you have done. You used a dataset of historical bicycle rental data to train a model. The model predicts the number of bicycle rentals expected on a given day, based on seasonal and meteorological features.
-
-Clean-up
